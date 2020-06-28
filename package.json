@@ -7,7 +7,8 @@
     "start": "electron .",
     "watch": "nodemon --exec 'electron .'",
     "reset": "git reset --hard",
-    "build": "electron-builder -mw"
+    "build": "electron-builder -mw",
+    "release": "electron-builder -m -p 'onTagOrDraft'"
   },
   "repository": "https://github.com/infinite3219/Readit",
   "keywords": [
@@ -19,11 +20,11 @@
     "appId": "com.terryc.readit",
     "copyright": "Copyright © 2020 Infinite Convergence Solutions, Inc.",
     "artifactName": "${productName}-setup.${ext}",
+    "publish": {
+      "provider": "github"
+    },
     "mac": {
       "category": "public.app-category.business",
-      "target": [
-        "dmg"
-      ],
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "type": "distribution",
