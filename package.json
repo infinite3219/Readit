@@ -1,13 +1,13 @@
 {
   "name": "Readit",
-  "version": "0.9.0",
+  "version": "1.0.11",
   "description": "Master Electron Course Code",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "watch": "nodemon --exec 'electron .'",
     "reset": "git reset --hard",
-    "build": "electron-builder -mw",
+    "build": "electron-builder -m",
     "release": "electron-builder -m -p 'onTagOrDraft'"
   },
   "repository": "https://github.com/infinite3219/Readit",
@@ -24,6 +24,10 @@
       "provider": "github"
     },
     "mac": {
+      "target": [
+        "pkg",
+        "zip"
+      ],
       "category": "public.app-category.business",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,

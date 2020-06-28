@@ -13,6 +13,7 @@ let showModal = document.getElementById('show-modal'),
 
 // Open new item modal
 window.newItem = () => {
+  ipcRenderer.send('newItem');
   showModal.click()
 }
 
@@ -36,7 +37,6 @@ window.searchItems = () => {
 
 // Filter items with "search"
 search.addEventListener('keyup', e => {
-
   // Loop items
   Array.from( document.getElementsByClassName('read-item') ).forEach( item => {
 
@@ -83,6 +83,7 @@ closeModal.addEventListener('click', e => {
 
 // Handle new item
 addItem.addEventListener('click', e => {
+  ipcRenderer.send('newItem');
 
   // Check a url exists
   if (itemUrl.value) {

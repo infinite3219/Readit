@@ -1,9 +1,12 @@
 
 // Modules
 const {remote, shell} = require('electron')
+// const updater = require('./updater')
+
 
 // Menu template
 const template = [
+
   {
     label: 'Items',
     submenu: [
@@ -57,9 +60,12 @@ if (process.platform === 'darwin') {
   template.unshift({
     label: remote.app.getName(),
     submenu: [
+      {
+        label: 'Check for updates',
+        click: updater
+      },
       { role: 'about' },
       { type: 'separator'},
-      { role: 'services' },
       { type: 'separator'},
       { role: 'hide' },
       { role: 'hideothers' },

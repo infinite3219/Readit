@@ -6,9 +6,14 @@ autoUpdater.logger = require("electron-log")
 autoUpdater.logger.transports.file.level = "debug"
 // disable auto download
 autoUpdater.autoDownload = false
+let updateInProgress = false;
 
 module.exports = () => {
-    autoUpdater.checkForUpdates();
+    if (updateInProgress === false) {
+        autoUpdater.checkForUpdates();
+        updateInProgress = true;
+    }
+    
     
     autoUpdater.on('update-available', () => {
         dialog.showMessageBox({
@@ -20,11 +25,19 @@ module.exports = () => {
             if (buttonIndex === 0) {
                 autoUpdater.downloadUpdate();
             }
+            else {
+                updateInProgress = false;
+            }
         });
         
     });
 
+    autoUpdater.on('update-not-available', () => {
+        updateInProgress = false;
+    });
+
     autoUpdater.on('update-downloaded', () => {
+        updateInProgress = false;
         // prompt user to install update
         dialog.showMessageBox({
             type: 'info',

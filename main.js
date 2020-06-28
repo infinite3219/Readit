@@ -9,6 +9,10 @@ const updater = require('./updater')
 let mainWindow
 
 // Listen for new item request
+ipcMain.on('newItem', () => {
+  console.log(`New item event received`);
+  updater();
+});
 ipcMain.on('new-item', (e, itemUrl) => {
 
   // Get new item and send back to renderer
@@ -45,7 +49,7 @@ function createWindow () {
   state.manage(mainWindow)
 
   // Open DevTools - Remove for PRODUCTION!
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Listen for window being closed
   mainWindow.on('closed',  () => {
