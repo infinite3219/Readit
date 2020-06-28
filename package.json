@@ -1,0 +1,66 @@
+{
+  "name": "Readit",
+  "version": "1.0.0",
+  "description": "Master Electron Course Code",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "watch": "nodemon --exec 'electron .'",
+    "reset": "git reset --hard",
+    "build": "electron-builder -mw"
+  },
+  "repository": "https://github.com/infinite3219/Readit",
+  "keywords": [
+    "Electron",
+    "Master Electron",
+    "demo"
+  ],
+  "build": {
+    "appId": "com.terryc.readit",
+    "copyright": "Copyright © 2020 Infinite Convergence Solutions, Inc.",
+    "artifactName": "${productName}-setup.${ext}",
+    "mac": {
+      "category": "public.app-category.business",
+      "target": [
+        "dmg"
+      ],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "type": "distribution",
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "artifactName": "${productName}.${ext}"
+    },
+    "pkg": {
+      "installLocation": "/Applications",
+      "allowAnywhere": true,
+      "allowCurrentUserHome": true,
+      "allowRootDirectory": true,
+      "isVersionChecked": false,
+      "isRelocatable": false,
+      "overwriteAction": "upgrade"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "certificateFile": "/Users/qa6482/electron/codesign2020.pfx",
+      "certificatePassword": ""
+    },
+    "linux": {}
+  },
+  "author": "GitHub, Stackacademytv",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^5.0.0",
+    "nodemon": "^1.18.9"
+  },
+  "dependencies": {
+    "electron-window-state": "^5.0.3"
+  }
+}
