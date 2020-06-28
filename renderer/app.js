@@ -2,6 +2,8 @@
 // Modules
 const {ipcRenderer} = require('electron')
 const items = require('./items')
+const log = require('electron-log');
+// const updater = require('../updater');
 
 // Dom Nodes
 let showModal = document.getElementById('show-modal'),
@@ -13,7 +15,6 @@ let showModal = document.getElementById('show-modal'),
 
 // Open new item modal
 window.newItem = () => {
-  ipcRenderer.send('newItem');
   showModal.click()
 }
 
@@ -31,13 +32,23 @@ window.openItemNative = items.openNative
 
 // Focus to search items
 window.searchItems = () => {
+  log.info(`Search searchItem`)
+  ipcRenderer.send(`newItem`)
   search.focus()
 }
 
+search.addEventListener('click', e => {
+  log.info(`Search click`)
+  ipcRenderer.send(`newItem`)
+});
 
 // Filter items with "search"
 search.addEventListener('keyup', e => {
   // Loop items
+  log.info(`Search keyup`)
+  ipcRenderer.send(`newItem`)
+
+
   Array.from( document.getElementsByClassName('read-item') ).forEach( item => {
 
     // Hide items that don't match search value
@@ -78,13 +89,13 @@ showModal.addEventListener('click', e => {
 
 // Hide modal
 closeModal.addEventListener('click', e => {
+  log.info(`LOG: close modal click`)
+
   modal.style.display = 'none'
 })
 
 // Handle new item
 addItem.addEventListener('click', e => {
-  ipcRenderer.send('newItem');
-
   // Check a url exists
   if (itemUrl.value) {
 
@@ -98,6 +109,8 @@ addItem.addEventListener('click', e => {
 
 // Listen for new item from main process
 ipcRenderer.on('new-item-success', (e, newItem) => {
+  log.info(`LOG: new-item-success, so calling add newItem`)
+
 
   // Add new item to "items" node
   items.addItem(newItem, true)

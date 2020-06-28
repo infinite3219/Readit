@@ -1,7 +1,6 @@
 
 // Modules
 const {remote, shell} = require('electron')
-// const updater = require('./updater')
 
 
 // Menu template

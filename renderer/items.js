@@ -2,6 +2,8 @@
 // Modules
 const fs = require('fs')
 const {shell} = require('electron')
+const { ipcRenderer } = require('electron')
+
 
 // DOM nodes
 let items = document.getElementById('items')
@@ -110,6 +112,7 @@ exports.openNative = () => {
 
   // Open in system browser
   shell.openExternal(selectedItem.node.dataset.url)
+  
 }
 
 // Open selected item

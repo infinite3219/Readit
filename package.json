@@ -1,6 +1,6 @@
 {
   "name": "Readit",
-  "version": "1.0.11",
+  "version": "1.0.26",
   "description": "Master Electron Course Code",
   "main": "main.js",
   "scripts": {
@@ -17,6 +17,7 @@
     "demo"
   ],
   "build": {
+    "afterSign": "build/scripts/notarize.js",
     "appId": "com.terryc.readit",
     "copyright": "Copyright © 2020 Infinite Convergence Solutions, Inc.",
     "artifactName": "${productName}-setup.${ext}",
@@ -63,9 +64,11 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^5.0.0",
+    "electron-notarize": "^1.0.0",
     "nodemon": "^1.18.9"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "electron-log": "^4.2.2",
     "electron-updater": "^4.3.1",
     "electron-window-state": "^5.0.3"

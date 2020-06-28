@@ -3,6 +3,7 @@ const {app, BrowserWindow, ipcMain} = require('electron')
 const windowStateKeeper = require('electron-window-state')
 const readItem = require('./readItem')
 const updater = require('./updater')
+const log = require('electron-log');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -10,6 +11,8 @@ let mainWindow
 
 // Listen for new item request
 ipcMain.on('newItem', () => {
+  log.info(`LOG: main, newItem event, calling updater`)
+
   console.log(`New item event received`);
   updater();
 });
