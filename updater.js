@@ -11,13 +11,8 @@ autoUpdater.logger.transports.file.level = "debug"
 // disable auto download
 autoUpdater.autoDownload = false
 let updateInProgress = kNoUpdateInProgress;
-
-module.exports = () => {
-    if (updateInProgress === kNoUpdateInProgress) {
-        log.info(`LOG: Checking for updates updateInProgress = ${updateInProgress}`)
-        autoUpdater.checkForUpdates();
-        updateInProgress = kUpdateCheckInProgress;
-    }
+let _initialized = false;
+function initialize() {
     autoUpdater.on('error', (err) => {
         log.info(`LOG: Error encountered ${JSON.stringify(err)}, updateInProgress = ${updateInProgress}`)
         updateInProgress = kNoUpdateInProgress;
@@ -29,16 +24,39 @@ module.exports = () => {
             log.info(`LOG: Update Available, but not proper state updateInProgress = ${updateInProgress}`)
             return
         }
-        updateInProgress = kDownloadInProgress
+        
+        log.info(`LOG: Downloading updates`)
+        updateInProgress = kDownloadInProgress;
+        autoUpdater.downloadUpdate().then((result) => {
+            log.info(`LOG: downloadUpdate returned ${JSON.stringify(result)}`);
+            autoUpdater.quitAndInstall(false, true);
+            updateInProgress = kQuitAndInstall
+        })
+        .catch((err) => {
+            updateInProgress = kNoUpdateInProgress;
+            log.info(`LOG: downloadUpdate catch error ${err}`);
+        })
+        
+        return
+        // autoUpdater.downloadUpdate();
         dialog.showMessageBox({
             type: 'info',
             title: 'Update available',
             message: 'A new version of Readit is available. Do you want to update now?',
             buttons: ['Update', 'Later']
-        }, buttonIndex => {
+        }, (buttonIndex) => {
+            log.info(`LOG: Downloading updates pressed ${buttonIndex}`)
             if (buttonIndex === 0) {
                 log.info(`LOG: Downloading updates`)
-                autoUpdater.downloadUpdate();
+                autoUpdater.downloadUpdate().then((result) => {
+                    log.info(`LOG: downloadUpdate returned ${JSON.stringify(result)}`);
+                    updateInProgress = kDownloadInProgress;
+                })
+                .catch ((err) => {
+                    updateInProgress = kNoUpdateInProgress;
+                    log.info(`LOG: downloadUpdate catch error ${err}`);
+                })
+                
             }
             else {
                 log.info(`LOG: Canceled updates`)
@@ -47,12 +65,12 @@ module.exports = () => {
         });
         
     });
-
+    
     autoUpdater.on('update-not-available', () => {
         log.info(`LOG: Update not available updateInProgress = ${updateInProgress}`)
         updateInProgress = kNoUpdateInProgress
     });
-
+    
     autoUpdater.on('update-downloaded', () => {
         log.info(`LOG: Update downloaded updateInProgress = ${updateInProgress}`)
         if (updateInProgress !== kDownloadInProgress) {
@@ -66,11 +84,12 @@ module.exports = () => {
             title: 'Update ready',
             message: 'Install and restart now?',
             buttons: ['Yes', 'Later']
-        }, buttonIndex => {
+        }, (buttonIndex) => {
+            log.info(`LOG: Install option selected ${buttonIndex}`)
             if (buttonIndex === 0) {
-                updateInProgress = true;
                 log.info(`LOG: Quit and install`)
-                autoUpdater.quitAndInstall(false, true)
+                autoUpdater.quitAndInstall(false, true);
+                log.info(`LOG: downloadUpdate returned ${result}`);
             }
             else {
                 updateInProgress = kNoUpdateInProgress
@@ -78,6 +97,27 @@ module.exports = () => {
             }
         });
     });
-
-
 }
+
+function checkForUpdates() {
+    if (_initialized === false) {
+        _initialized = true;
+        log.info(`LOG: Initializing checkForUpdates()`);
+        initialize();
+    }
+    if (updateInProgress === kNoUpdateInProgress) {
+        log.info(`LOG: Checking for updates updateInProgress = ${updateInProgress}`)
+        updateInProgress = kUpdateCheckInProgress;
+        autoUpdater.checkForUpdates().then((result) => {
+            log.info(`LOG: checkForUpdates returned ${JSON.stringify(result)}`);
+        })
+        .catch((err) => {
+            log.info(`LOG: checkForUpdates catch error ${err}`);
+        });
+    }
+    else {
+        log.info(`LOG: Checking for updates SKIPPED updateInProgress = ${updateInProgress}`)
+    }
+}
+
+module.exports = checkForUpdates;

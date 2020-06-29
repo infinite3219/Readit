@@ -1,6 +1,6 @@
 {
-  "name": "Readit",
-  "version": "1.0.26",
+  "name": "Readit3",
+  "version": "1.0.65",
   "description": "Master Electron Course Code",
   "main": "main.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "watch": "nodemon --exec 'electron .'",
     "reset": "git reset --hard",
     "build": "electron-builder -m",
-    "release": "electron-builder -m -p 'onTagOrDraft'"
+    "release": "electron-builder -w -p 'always'"
   },
   "repository": "https://github.com/infinite3219/Readit",
   "keywords": [
@@ -18,7 +18,7 @@
   ],
   "build": {
     "afterSign": "build/scripts/notarize.js",
-    "appId": "com.terryc.readit",
+    "appId": "com.terryc.readit3",
     "copyright": "Copyright © 2020 Infinite Convergence Solutions, Inc.",
     "artifactName": "${productName}-setup.${ext}",
     "publish": {
@@ -55,6 +55,7 @@
           ]
         }
       ],
+      "publisherName": "Infinite Convergence Solutions, Inc.",
       "certificateFile": "/Users/qa6482/electron/codesign2020.pfx",
       "certificatePassword": ""
     },
@@ -63,7 +64,8 @@
   "author": "GitHub, Stackacademytv",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^5.0.0",
+    "electron": "^8.3.1",
+    "electron-builder": "^22.7.0",
     "electron-notarize": "^1.0.0",
     "nodemon": "^1.18.9"
   },

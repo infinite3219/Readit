@@ -12,7 +12,6 @@ let mainWindow
 // Listen for new item request
 ipcMain.on('newItem', () => {
   log.info(`LOG: main, newItem event, calling updater`)
-
   console.log(`New item event received`);
   updater();
 });
