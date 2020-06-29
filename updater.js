@@ -18,51 +18,49 @@ function initialize() {
         updateInProgress = kNoUpdateInProgress;
     });
     
-    autoUpdater.on('update-available', (updateInfo) => {
+    autoUpdater.on('update-available', async (updateInfo) => {
         log.info(`LOG: Update Available updateInProgress = ${updateInProgress}, update Info = ${JSON.stringify(updateInfo)}`)
         if (updateInProgress !== kUpdateCheckInProgress) {
             log.info(`LOG: Update Available, but not proper state updateInProgress = ${updateInProgress}`)
-            return
+            retur
         }
         
         log.info(`LOG: Downloading updates`)
         updateInProgress = kDownloadInProgress;
-        autoUpdater.downloadUpdate().then((result) => {
-            log.info(`LOG: downloadUpdate returned ${JSON.stringify(result)}`);
-            autoUpdater.quitAndInstall(false, true);
-            updateInProgress = kQuitAndInstall
-        })
-        .catch((err) => {
-            updateInProgress = kNoUpdateInProgress;
-            log.info(`LOG: downloadUpdate catch error ${err}`);
-        })
+        // autoUpdater.downloadUpdate().then((result) => {
+        //     log.info(`LOG: downloadUpdate returned ${JSON.stringify(result)}`);
+        //     autoUpdater.quitAndInstall(false, true);
+        //     updateInProgress = kQuitAndInstall
+        // })
+        // .catch((err) => {
+        //     updateInProgress = kNoUpdateInProgress;
+        //     log.info(`LOG: downloadUpdate catch error ${err}`);
+        // })
         
-        return
-        // autoUpdater.downloadUpdate();
-        dialog.showMessageBox({
+        
+        const result = await dialog.showMessageBox({
             type: 'info',
             title: 'Update available',
             message: 'A new version of Readit is available. Do you want to update now?',
             buttons: ['Update', 'Later']
-        }, (buttonIndex) => {
-            log.info(`LOG: Downloading updates pressed ${buttonIndex}`)
-            if (buttonIndex === 0) {
-                log.info(`LOG: Downloading updates`)
-                autoUpdater.downloadUpdate().then((result) => {
-                    log.info(`LOG: downloadUpdate returned ${JSON.stringify(result)}`);
-                    updateInProgress = kDownloadInProgress;
-                })
-                .catch ((err) => {
-                    updateInProgress = kNoUpdateInProgress;
-                    log.info(`LOG: downloadUpdate catch error ${err}`);
-                })
-                
-            }
-            else {
-                log.info(`LOG: Canceled updates`)
-                updateInProgress = kNoUpdateInProgress
-            }
         });
+        log.info(`LOG: Downloading updates pressed ${JSON.stringify(result)}`)
+        if (result.response === 0) {
+            log.info(`LOG: Downloading updates`)
+            autoUpdater.downloadUpdate().then((result) => {
+                log.info(`LOG: downloadUpdate returned ${JSON.stringify(result)}`);
+                updateInProgress = kDownloadInProgress;
+            })
+            .catch ((err) => {
+                updateInProgress = kNoUpdateInProgress;
+                log.info(`LOG: downloadUpdate catch error ${err}`);
+            })
+            
+        }
+        else {
+            log.info(`LOG: Canceled updates`)
+            updateInProgress = kNoUpdateInProgress
+        }
         
     });
     
@@ -71,7 +69,7 @@ function initialize() {
         updateInProgress = kNoUpdateInProgress
     });
     
-    autoUpdater.on('update-downloaded', () => {
+    autoUpdater.on('update-downloaded', async () => {
         log.info(`LOG: Update downloaded updateInProgress = ${updateInProgress}`)
         if (updateInProgress !== kDownloadInProgress) {
             log.info(`LOG: Update Downloaded, but not proper state updateInProgress = ${updateInProgress}`)
@@ -79,23 +77,25 @@ function initialize() {
         }
         updateInProgress = kQuitAndInstall
         // prompt user to install update
-        dialog.showMessageBox({
+        const result  = await dialog.showMessageBox({
             type: 'info',
             title: 'Update ready',
             message: 'Install and restart now?',
             buttons: ['Yes', 'Later']
-        }, (buttonIndex) => {
-            log.info(`LOG: Install option selected ${buttonIndex}`)
-            if (buttonIndex === 0) {
-                log.info(`LOG: Quit and install`)
-                autoUpdater.quitAndInstall(false, true);
-                log.info(`LOG: downloadUpdate returned ${result}`);
-            }
-            else {
-                updateInProgress = kNoUpdateInProgress
-                log.info(`LOG: Canceled updated for restart`)
-            }
         });
+        
+        log.info(`LOG: Install option selected ${JSON.stringify(result)}`)
+        if (result.response === 0) {
+            log.info(`LOG: Quit and install`)
+            autoUpdater.quitAndInstall(false, true);
+            // log.info(`LOG: downloadUpdate returned ${result}`);
+            updateInProgress = kNoUpdateInProgress
+            // log.info(`LOG: Canceled updated for restart purposes`)
+        }
+        else {
+            log.info(`LOG: Quit and install deferred. Response ${result.response}`)
+        }
+        
     });
 }
 
