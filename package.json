@@ -1,7 +1,6 @@
 {
   "name": "Readit3",
   "version": "1.0.65",
-  "description": "Master Electron Course Code",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -61,7 +60,6 @@
     },
     "linux": {}
   },
-  "author": "GitHub, Stackacademytv",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^8.3.1",
