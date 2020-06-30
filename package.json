@@ -1,13 +1,13 @@
 {
   "name": "Readit3",
-  "version": "1.0.78",
+  "version": "1.0.81",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "watch": "nodemon --exec 'electron .'",
     "reset": "git reset --hard",
-    "build": "electron-builder -m",
-    "release": "electron-builder -m -p 'always'"
+    "build": "electron-builder -m -c.extraMetadata.productName=ReaditBeta",
+    "release": "electron-builder -m -p 'always' -c.extraMetadata.productName=ReaditBeta"
   },
   "repository": "https://github.com/infinite3219/Readit",
   "keywords": [
@@ -23,7 +23,8 @@
     "publish": {
       "provider": "s3",
       "bucket": "desktop-test",
-      "region": "us-west-2"
+      "region": "us-west-2",
+      "path": "${productName}"
     },
     "mac": {
       "target": [
